@@ -1,0 +1,27 @@
+<table #userTable userTable mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort style="margin: auto;">
+
+    <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+        <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+        <td mat-cell *matCellDef="let user"> {{user.firstname}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+        <td mat-cell *matCellDef="let user"> {{user.lastname}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="permissions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Permissions </th>
+        <td mat-cell *matCellDef="let user"> {{user.permissions}} </td>
+    </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<button mat-raised-button style="margin-top:2em;" (click)="addUser()">Add User</button>

@@ -1,0 +1,33 @@
+
+<table style="width: 100%; text-align: center; margin:auto;">
+  <tbody>
+    <tr>
+      <td>
+        <h1 class="mat-display-1">{{ title }}</h1>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h2 class="mat-h2">{{ info }}</h2>
+      </td>
+    </tr>
+    <tr *ngIf="loggedIn">
+      <td>
+        <table-users></table-users>
+      </td>
+    </tr>
+    <tr *ngIf="loggedIn">
+      <td>
+          <mat-form-field>
+            <input #message matInput placeholder="Message">
+          </mat-form-field>
+          <button mat-raised-button (click)="sendMessage(message.value)">Submit</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+

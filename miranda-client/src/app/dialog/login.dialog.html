@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Login</h2>
+<mat-dialog-content>
+    <h3 class="mat-h3" style="font-weight: bold;">Please enter your login credentials.</h3>
+    <h3 *ngIf="errorMessage" class="mat-h3" style="color: red;">Invalid username or password.</h3>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <form>
+        <mat-form-field>
+            <input #username matInput placeholder="Username" value="">
+        </mat-form-field>
+        <mat-form-field>
+            <input #password matInput placeholder="Password" [type]="hide ? 'password' : 'text'">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </mat-form-field>
+    </form>
+  <button mat-raised-button [mat-dialog-close]='{"username":username.value, "password": password.value}'>Submit</button>
+</mat-dialog-actions>
