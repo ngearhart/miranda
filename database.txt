@@ -1,0 +1,24 @@
+MIRANDA DATABASES
+
+
+- Users:
+	- Username
+	- Firstname
+	- Lastname
+	- Password
+	- Permissions
+	- Fingerprint
+
+- Door:
+	- Timecode
+	- EventType (Unlock, lock, dooropen, doorclose)
+	- User
+	
+- LightEvents (for recurring events)
+	- Date/time
+	- Status
+	
+- LightLog
+	- Timecode
+	- Status (figure out later)
+	- User
