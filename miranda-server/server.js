@@ -7,6 +7,7 @@ let verbose = true;
 */ 
 let express = require('express')
 let app = express();
+let path = require('path');
 
 let http = require('http');
 let server = http.Server(app);
@@ -15,7 +16,6 @@ let socketIO = require('socket.io');
 let io = socketIO(server);
 
 let crypto = require('crypto');
-
 let database = require('./database.js');
 
 let logger = require('./logger.js');
@@ -30,6 +30,17 @@ let users = {};
 /* 
 * - - - - - -
 */
+
+let httpPort = 80;
+logger.info("Setting up express http server...");
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+app.set('port', httpPort);
+let httpServer = http.createServer(app);
+
+httpServer.listen(httpPort, () => logger.info(`Web server running on port: ${httpPort}`));
 
 // https://stackoverflow.com/questions/19106861/authorizing-and-handshaking-with-socket-io
 io.use((socket, next) => {

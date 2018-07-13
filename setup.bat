@@ -1,4 +1,3 @@
-@ECHO OFF
 cd miranda-client
 echo Installing Angular CLI...
 npm install -g @angular/cli
@@ -9,4 +8,3 @@ npm link
 echo Done. Updating...
 npm install npm@latest -g
 echo Done.
-PAUSE
