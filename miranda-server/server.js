@@ -38,6 +38,7 @@ app.get('*', (req, res) => {
 app.set('port', httpPort);
 
 var httpServer;
+var socketIOServer;
 try {
     let httpsOptions = {  
         key: fs.readFileSync(sslPath + 'privkey.pem'),
@@ -54,13 +55,18 @@ try {
         res.redirect('https://' + req.headers.host + req.url);
     })
     redirectServer.listen(80, () => logger.info("Non-ssl redirection server setup complete"));
+    socketIOServer = https.Server(app);
 } catch(e) {
     httpPort = 80;
     app.set('port', httpPort);
     httpServer = http.createServer(app);
     httpServer.listen(httpPort, () => logger.info(`Web server running on port NO SSL: ${httpPort}`));
+    socketIOServer = http.Server(app);
 }
-let io = socketIO.listen(httpServer);
+let io = socketIO(socketIOServer);
+
+socketIOServer.listen(3000, () => logger.info("Socket.IO started on port 3000"));
+
 logger.initConsoleReader(verbose, database, io, logger);
 database.init(logger);
 

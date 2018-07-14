@@ -8,11 +8,11 @@ export class ChatService {
 
     constructor() {
         if (environment.production)
-            this.url = "https://miranda.noahgearhart.com:3000";
+            this.url = "miranda.noahgearhart.com:3000";
     }
 
     public login(data, onSuccess, onError) {
-        this.socket = io(this.url, { query: data });
+        this.socket = io(this.url, { query: data , secure: true});
 
         this.socket.on('connect', () => {
             console.log("Successfully logged in and connected socket.io");
