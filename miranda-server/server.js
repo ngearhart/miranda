@@ -9,8 +9,14 @@ let express = require('express')
 let app = express();
 let path = require('path');
 
-let http = require('http');
-let server = http.Server(app);
+let http = require('https');
+let sslPath = "/etc/letsencrypt/live/miranda.noahgearhart.com/";
+let fs = require('fs');
+let httpsOptions = {  
+    key: fs.readFileSync(sslPath + 'privkey.pem'),
+    cert: fs.readFileSync(sslPath + 'fullchain.pem')
+};
+let server = http.createServer(httpsOptions, app);
 
 let socketIO = require('socket.io');
 let io = socketIO(server);

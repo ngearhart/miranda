@@ -1,11 +1,14 @@
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export class ChatService {
     private url = 'http://localhost:3000';
     private socket;    
 
     constructor() {
+        if (environment.production)
+            this.url = "http://miranda.noahgearhart.com:3000";
     }
 
     public login(data, onSuccess, onError) {
