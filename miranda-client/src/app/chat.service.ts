@@ -8,7 +8,7 @@ export class ChatService {
 
     constructor() {
         if (environment.production)
-            this.url = "http://miranda.noahgearhart.com:3000";
+            this.url = "https://miranda.noahgearhart.com:3000";
     }
 
     public login(data, onSuccess, onError) {

@@ -4,7 +4,7 @@
     let  dateTime = require('node-datetime');
     var verbose = true;
 
-    module.exports.initConsoleReader = (verbose, database, server, io, logger) => {
+    module.exports.initConsoleReader = (verbose, database, io, logger) => {
         this.verbose = verbose;
         // Console commands
         stdin.addListener("data", function(d) {
@@ -13,7 +13,6 @@
             switch (params[0]) {
                 case "exit":
                     logger.warn("Closing Miranda-AWS NodeJS Server...");
-                    server.close();
                     io.close();
                     logger.info("Connections closed. Process terminated");
                     process.exit(0);

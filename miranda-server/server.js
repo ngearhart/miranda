@@ -9,24 +9,17 @@ let express = require('express')
 let app = express();
 let path = require('path');
 
-let http = require('https');
+let http = require('http');
+let https = require('https');
 let sslPath = "/etc/letsencrypt/live/miranda.noahgearhart.com/";
 let fs = require('fs');
-let httpsOptions = {  
-    key: fs.readFileSync(sslPath + 'privkey.pem'),
-    cert: fs.readFileSync(sslPath + 'fullchain.pem')
-};
-let server = http.createServer(httpsOptions, app);
 
 let socketIO = require('socket.io');
-let io = socketIO(server);
 
 let crypto = require('crypto');
 let database = require('./database.js');
 
 let logger = require('./logger.js');
-logger.initConsoleReader(verbose, database, server, io, logger);
-database.init(logger);
 
 const port = process.env.PORT || 3000;
 
@@ -36,17 +29,40 @@ let users = {};
 /* 
 * - - - - - -
 */
-
-let httpPort = 80;
+let httpPort = 443;
 logger.info("Setting up express http server...");
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 app.set('port', httpPort);
-let httpServer = http.createServer(app);
 
-httpServer.listen(httpPort, () => logger.info(`Web server running on port: ${httpPort}`));
+var httpServer;
+try {
+    let httpsOptions = {  
+        key: fs.readFileSync(sslPath + 'privkey.pem'),
+        cert: fs.readFileSync(sslPath + 'fullchain.pem')
+    };
+    
+    httpServer = https.createServer(httpsOptions, app);
+    httpServer.listen(httpPort, () => logger.info(`Web server running on port with ssl: ${httpPort}`));
+
+    // YAY! If we get this far, ssl is working.
+    // Now, we automatically redirect to https
+    var redirectServer = express();
+    redirectServer.get('*', function(req, res) {  
+        res.redirect('https://' + req.headers.host + req.url);
+    })
+    redirectServer.listen(80, () => logger.info("Non-ssl redirection server setup complete"));
+} catch(e) {
+    httpPort = 80;
+    app.set('port', httpPort);
+    httpServer = http.createServer(app);
+    httpServer.listen(httpPort, () => logger.info(`Web server running on port NO SSL: ${httpPort}`));
+}
+let io = socketIO.listen(httpServer);
+logger.initConsoleReader(verbose, database, io, logger);
+database.init(logger);
 
 // https://stackoverflow.com/questions/19106861/authorizing-and-handshaking-with-socket-io
 io.use((socket, next) => {
@@ -129,8 +145,3 @@ io.on('connection', (socket) => {
         });
     });
 });
-
-server.listen(port, () => {
-    logger.info(`Started on port: ${port}`);
-});
-
