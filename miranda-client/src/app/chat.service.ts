@@ -3,16 +3,16 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
 export class ChatService {
-    private url = 'http://localhost:3000';
+    private url = 'localhost:80';
     private socket;    
 
     constructor() {
         if (environment.production)
-            this.url = "miranda.noahgearhart.com:3000";
+            this.url = "https://miranda.noahgearhart.com:443";
     }
 
     public login(data, onSuccess, onError) {
-        this.socket = io(this.url, { query: data , secure: true});
+        this.socket = io(this.url, { query: data });
 
         this.socket.on('connect', () => {
             console.log("Successfully logged in and connected socket.io");
