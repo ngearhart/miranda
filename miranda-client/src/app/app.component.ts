@@ -3,7 +3,7 @@ import { ChatService } from './chat.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 import { LoginDialog, LoadingDialog } from './dialog/dialog.component';
 import { User } from './tables/tables.component';
-import { CookieService } from '../../node_modules/angular2-cookie/services/cookies.service';
+import { CookieService } from './cookie.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   constructor(private chatService: ChatService, private dialog: MatDialog, private snackBar: MatSnackBar, private cookies: CookieService) {
     this.openLoginDialog(false);
 
-    var sesscookie = this.cookies.get("miranda-sessionvar");
+    var sesscookie = this.cookies.getCookie("miranda-sessionvar");
     console.log("Sesscookie = " + sesscookie);
     if (sesscookie) {
       this.chatService.loginCookie(sesscookie, () => {
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
           console.log("Cookie requesting...");
           this.chatService.send("cookie", "create");
           this.chatService.getData("cookie").subscribe(result => {
-            this.cookies.put("miranda-sessionvar", result);
+            this.cookies.setCookie("miranda-sessionvar", result);
             console.log("Cookie = " + result);
           });
         }

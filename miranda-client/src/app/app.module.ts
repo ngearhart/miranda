@@ -9,7 +9,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { LoginDialog, LoadingDialog, NewUserDialog } from './dialog/dialog.component';
 import { MatButtonModule, MatToolbarModule, MatInputModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatTableModule, MatSortModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
 import { UserTable } from './tables/tables.component';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CookieService } from './cookie.service';
 
 
 // DONT FORGET NOAH TO ADD MODULE IF MATDESIGN WONT WORK!
@@ -40,7 +43,10 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
     MatTableModule,
     MatSortModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    HttpModule,
+    HttpClientModule,
+    HttpClientTestingModule
   ],
   providers: [ChatService, CookieService],
   bootstrap: [AppComponent]
