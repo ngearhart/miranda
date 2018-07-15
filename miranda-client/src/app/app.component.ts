@@ -73,6 +73,7 @@ export class AppComponent implements OnInit {
   }
 
   doLoggedIn(): void {
+    this.loggedIn = true;
     this.snackBar.open("Logged in!", "Close", {duration: 5000});
     this.dialog.closeAll();
 
@@ -87,7 +88,6 @@ export class AppComponent implements OnInit {
 
       this.info = "Welcome, " + this.user.firstname + " " + this.user.lastname + "!";
 
-      this.loggedIn = true;
     });
   }
 

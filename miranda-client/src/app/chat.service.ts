@@ -11,21 +11,17 @@ export class ChatService {
             this.url = "https://miranda.noahgearhart.com:443";
     }
 
-    public loginCookie(cookie, onSuccess, onError?) {
+    public loginCookie(cookie, onSuccess) {
+        console.log("Attempting to login using cookie...");
         this.socket = io(this.url, { query: {"cookie": cookie } });
         this.socket.on('connect', () => {
             console.log("Successfully logged in with cookie and connected socket.io");
             onSuccess();
         });
-
-        this.socket.on('error', (message) => {
-            console.log("Login cookie error: " + message);
-            if (onError)
-                onError();
-        }); 
     }
 
     public login(data, onSuccess, onError) {
+        console.log("Attempting to login using regular login...");
         this.socket = io(this.url, { query: data });
 
         this.socket.on('connect', () => {
@@ -34,8 +30,8 @@ export class ChatService {
         });
 
         this.socket.on('error', (message) => {
-            console.log("Login error: " + message);
-            onError();
+            console.log("Login error: " + message + ", connected: " + this.socket.connected);
+            if (!this.socket.connected) onError();
         });        
     }
 

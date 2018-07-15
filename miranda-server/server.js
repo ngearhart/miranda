@@ -80,7 +80,7 @@ io.use((socket, next) => {
             if(cookies.hasOwnProperty(key) && handshake.cookie == cookies[key]) {
                 // If auth cookie exists
                 handshake.id = key;
-                next();
+                return next();
             }
         }
     }
