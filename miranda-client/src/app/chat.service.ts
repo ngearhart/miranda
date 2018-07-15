@@ -11,6 +11,20 @@ export class ChatService {
             this.url = "https://miranda.noahgearhart.com:443";
     }
 
+    public loginCookie(cookie, onSuccess, onError?) {
+        this.socket = io(this.url, { query: {"cookie": cookie } });
+        this.socket.on('connect', () => {
+            console.log("Successfully logged in with cookie and connected socket.io");
+            onSuccess();
+        });
+
+        this.socket.on('error', (message) => {
+            console.log("Login cookie error: " + message);
+            if (onError)
+                onError();
+        }); 
+    }
+
     public login(data, onSuccess, onError) {
         this.socket = io(this.url, { query: data });
 

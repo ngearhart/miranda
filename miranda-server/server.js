@@ -25,6 +25,9 @@ const port = process.env.PORT || 3000;
 
 let currentId = 0;
 let users = {};
+let cookies = {};
+
+let currentDateString = new Date().toDateString();
 
 /* 
 * - - - - - -
@@ -71,6 +74,16 @@ io.use((socket, next) => {
     var handshake = socket.handshake.query;
 
     logger.verbose("Query: " + JSON.stringify(handshake));
+
+    if (handshake.cookie) {
+        for(var key in cookies) {
+            if(cookies.hasOwnProperty(key) && handshake.cookie == cookies[key]) {
+                // If auth cookie exists
+                handshake.id = key;
+                next();
+            }
+        }
+    }
 
     if (!handshake.username || !handshake.password) {
         logger.verbose("Denied connection due to lack of credentials");
@@ -145,5 +158,15 @@ io.on('connection', (socket) => {
                     socket.emit('new-user', "error");
             });
         });
+    });
+
+    socket.on('cookie', (message) => {
+        switch(message) {
+            case "create":
+                // Store cookie as server start date + user id. This makes the user unique. However, it refreshes when the server restarts (both time and id)
+                cookies[socket.handshake.query.id] = crypto.createHash('sha256').update(currentDateString + socket.handshake.query.id).digest('hex')
+                socket.emit("cookie", "" + cookies[socket.handshake.query.id]);
+                break;
+        }
     });
 });

@@ -7,8 +7,9 @@ import { ChatService } from './chat.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogModule} from '@angular/material/dialog';
 import { LoginDialog, LoadingDialog, NewUserDialog } from './dialog/dialog.component';
-import { MatButtonModule, MatToolbarModule, MatInputModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatSnackBar, MatTableModule, MatSortModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatToolbarModule, MatInputModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule, MatSnackBarModule, MatTableModule, MatSortModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
 import { UserTable } from './tables/tables.component';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 
 // DONT FORGET NOAH TO ADD MODULE IF MATDESIGN WONT WORK!
@@ -38,9 +39,10 @@ import { UserTable } from './tables/tables.component';
     MatSnackBarModule,
     MatTableModule,
     MatSortModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule
   ],
-  providers: [ChatService],
+  providers: [ChatService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

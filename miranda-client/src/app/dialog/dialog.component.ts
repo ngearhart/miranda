@@ -11,6 +11,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/ma
 export class LoginDialog {
   hide = true;
   errorMessage = false;
+  rememberMe: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialog>,
