@@ -24,7 +24,10 @@
         if (location) {
             getTimeZone(location, result => {
                 var zone = moment.tz.zone(result);
-                if (!zone) onComplete("I could not find that time zone.");
+                if (!zone) {
+                    onComplete("I could not find that time zone.");
+                    return;
+                }
                 onComplete("It is " + moment.tz(result).format("h:mm A") + " in " + location + " right now.");
             });
         }
@@ -92,7 +95,7 @@
                 
                 onComplete("The weather is " + weather + " with a current temperature of " + temperature + " degrees. The high is " + max + " degrees and the low is " + min + " degrees.");
             } catch(e) {
-                onComplete("An exception occured: " + JSON.stringify(data));
+                onComplete("I could not find the weather because " + data.message + ".");
             }
         });
     }
@@ -115,6 +118,7 @@
                 var lat = data.coord.lat;
             } catch(e) {
                 onComplete("An exception occured: " + JSON.stringify(data));
+                return;
             }
 
             var options2 = {
