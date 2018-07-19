@@ -21,6 +21,8 @@ let database = require('./database.js');
 
 let logger = require('./logger.js');
 
+let api = require('./api.js');
+
 const port = process.env.PORT || 3000;
 
 let currentId = 0;
@@ -35,8 +37,11 @@ let currentDateString = new Date().toDateString();
 let httpPort = 443;
 logger.info("Setting up express http server...");
 app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+app.get('/api/:method/:info', function (req, res) {
+    api.parse(req.params, result => res.send(result));
 });
 app.set('port', httpPort);
 
