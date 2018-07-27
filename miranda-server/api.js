@@ -8,14 +8,53 @@
     const WEATHER_API_KEY = "3123c47af54da02883183b8f2e6c79d9";
     const TIME_API_KEY = "T8INAXCO43HJ";
 
+    const MARVEL_PUBLIC = "abffb0844ec41c198c5aa88cec8d0be3";
+    const MARVEL_PRIVATE = "035d0f79438f92f91ecc8957242bf300cd1e23c3";
+    let crypto = require('crypto');
+
+    let wikipedia = require('wikipedia-js');
+    let xml2js = require('xml2js');
+
     module.exports.parse = (data, onComplete) => {
         switch(data.method) {
             case "time":
                 getTime(data.info, onComplete);
-            break;
+                break;
             case "weather":
-            getWeatherString(data, onComplete);
-            break;
+                getWeatherString(data, onComplete);
+                break;
+            case "marvel":
+                marvel_GetHero(data.name, onComplete);
+                break;
+            case "wikipedia":
+                search(data.query, result => {
+                    if (!result) {
+                        onComplete("Not found"); 
+                        return;
+                    }
+                    // var dataResult = JSON.parse(result).query.pages;
+                    // var text = dataResult[Object.keys(dataResult)[0]].revisions[0]["*"];
+                    // text = text.replace("{{", "").replace("}}", "").replace("[[", "").replace("]]", "");
+
+                    result = result.replace(/<\/?[^>]+(>|$)/g, "");
+                    result = result.replace(/\[\/?[^\]]+(\]|$)/g, "");
+                    result = result.replace(/\(\/?[^\)]+(\)|$)/g, "").replace("()", "").replace("  ", " ").trim();
+
+                    if (result.length > 1000) {
+                        var spl = result.split(".");
+                        result = "";
+                        for (let i = 0; i < 4; i++)
+                            result += spl[i];
+                    }
+
+                    if (result.includes("can refer to:")) {
+                        result = "You need to be more specific";
+                    }
+
+                    onComplete(result);
+                    //xml2js.parseString(result, result => console.log(result));
+                });
+                break;
         }
     };
 
@@ -68,7 +107,59 @@
     
         req.end();
     }
-    
+
+    function search(query, onComplete) {
+        wikipedia.searchArticle({query: query, format: "html", summaryOnly: "true"}, (err, text) => {
+            if (!text) {
+                wikipedia.searchArticle({query: query.replace(" ", "_"), format: "html", summaryOnly: "true"}, (err, text) => {
+                    onComplete(text);
+                });
+                return;
+            }
+            onComplete(text);
+        });
+        //wikipedia.page.description(query, response => onComplete(response));
+    }
+
+    function marvel_GetHero(name, onComplete) {
+        var hero = {};
+        var tries = 0;
+        var getFunction = function() {
+            var dateMillis = new Date().getMilliseconds();
+            var options = {
+                host: 'gateway.marvel.com',
+                port: 80,
+                path: '/v1/public/characters?ts=' + dateMillis + "&apikey=" + MARVEL_PUBLIC + "&hash=" + crypto.createHash('md5').update(dateMillis + MARVEL_PRIVATE + MARVEL_PUBLIC).digest('hex'),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            switch(tries) {
+                case 1:
+                    options.path += "&nameStartsWith=" + name.replace(" ", "-");
+                    break;
+                case 2: options.path += "&nameStartsWith=" + (name.substring(0, name.lastIndexOf("man")) + "-" + name.substring(name.lastIndexOf("man"))).replace(" ", "%20");
+                    break; 
+                case 3: onComplete(null);
+                    return;
+                default:
+                    options.path += "&nameStartsWith=" + name.replace(" ", "%20");
+            }
+
+            doHttpGet(options, (code, data) => {
+                hero = data.data.results[0];
+                if (!hero) {
+                    tries++;
+                    getFunction();
+                    return;
+                } else onComplete(hero);
+            });
+        };
+        getFunction();
+    }
+
     function convertTemp(kelvin) {
         return Math.floor(((kelvin * 9 / 5) - 459.67) * 10) / 10;
     }
