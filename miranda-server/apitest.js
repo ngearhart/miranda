@@ -1,0 +1,1 @@
+require('./api.js').parse({method: "wikipedia", info: '{"query":"spider man"}'}, result => console.log(result));

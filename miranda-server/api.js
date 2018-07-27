@@ -27,7 +27,7 @@
                 marvel_GetHero(data.name, onComplete);
                 break;
             case "wikipedia":
-                search(data.query, result => {
+                search(JSON.parse(data.info).query, result => {
                     if (!result) {
                         onComplete("Not found"); 
                         return;
