@@ -1,7 +1,7 @@
 (function() {
 
     var mongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/miranda";
+    var url = "mongodb+srv://admin:hOIbH7RLn8QyPBca@miranda-fioky.mongodb.net/admin";
 
     let logger = require('./logger.js');
 
