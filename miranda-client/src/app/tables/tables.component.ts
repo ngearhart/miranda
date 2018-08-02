@@ -2,10 +2,23 @@ import { Component, Input, ViewChild } from "@angular/core";
 import { ChatService } from "../chat.service";
 import { MatTableDataSource, MatTable, MatDialog, MatSnackBar } from "@angular/material";
 import { NewUserDialog } from "../dialog/dialog.component";
+import { trigger, state, transition, style, animate } from '../../../node_modules/@angular/animations';
 
 @Component({
     selector: 'table-users',
     templateUrl: 'tables.users.html',
+    animations: [
+      trigger('flyIn', [
+        state('in', style({opacity: 1, transform: 'translateY(0)'})),
+        transition('void => *', [
+          style({opacity: 0, transform: 'translateY(50%)'}),
+          animate('250ms ease-out')
+        ]),
+        transition('* => void', [
+          animate('250ms ease-out', style({opacity: 0, transform: 'translateY(50%)'}))
+        ])
+      ])
+    ]
   })
   export class UserTable {
     displayedColumns: string[] = ['username', 'firstname', 'lastname', 'permissions'];

@@ -21,7 +21,7 @@
     </ng-container>
     
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [@flyIn]></tr>
 </table>
 
 <button mat-raised-button style="margin-top:2em;" (click)="addUser()">Add User</button>

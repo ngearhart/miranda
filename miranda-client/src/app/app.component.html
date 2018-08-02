@@ -11,17 +11,17 @@
         <h2 class="mat-h2">{{ info }}</h2>
       </td>
     </tr>
-    <tr *ngIf="loggedIn">
-      <td>
-        <table-users></table-users>
+    <tr>
+      <td *ngIf="loggedIn" [@flyInOut]="loggedIn">
+        <table-users style="padding-bottom: 5em;"></table-users>
       </td>
     </tr>
-    <tr *ngIf="loggedIn">
+    <tr style="height:1em;">
+      <td></td>
+    </tr>
+    <tr>
       <td>
-          <mat-form-field>
-            <input #message matInput placeholder="Message">
-          </mat-form-field>
-          <button mat-raised-button (click)="sendMessage(message.value)">Submit</button>
+          <button mat-raised-button *ngIf="loggedIn" (click)="openLightDialog();" [@flyInOut]="loggedIn">Light Control</button>
       </td>
     </tr>
   </tbody>

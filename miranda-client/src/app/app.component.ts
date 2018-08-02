@@ -4,13 +4,26 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/ma
 import { LoginDialog, LoadingDialog } from './dialog/dialog.component';
 import { User } from './tables/tables.component';
 import { CookieService } from './cookie.service';
+import { trigger, state, transition, style, animate } from '../../node_modules/@angular/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  animations: [
+    trigger('flyInOut', [
+      state('in', style({opacity: 1, transform: 'translateY(0)'})),
+      transition('void => *', [
+        style({opacity: 0, transform: 'translateY(100%)'}),
+        animate('500ms ease-out')
+      ]),
+      transition('* => void', [
+        animate('500ms ease-out', style({opacity: 0, transform: 'translateY(100%)'}))
+      ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
-  title = 'Miranda-AWS Frontend';
+  title = 'Main Menu';
   info = 'Waiting for login...';
   messages: string[] = [];
   user: UserData;
@@ -18,6 +31,7 @@ export class AppComponent implements OnInit {
   users: User[]; // For UserTable
 
   loggedIn: boolean = false;
+  flyIn: string;
 
   constructor(private chatService: ChatService, private dialog: MatDialog, private snackBar: MatSnackBar, private cookies: CookieService) {
     this.openLoginDialog(false);
@@ -74,6 +88,7 @@ export class AppComponent implements OnInit {
 
   doLoggedIn(): void {
     this.loggedIn = true;
+    this.flyIn = "in";
     this.snackBar.open("Logged in!", "Close", {duration: 5000});
     this.dialog.closeAll();
 
