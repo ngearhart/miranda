@@ -183,4 +183,8 @@ io.on('connection', (socket) => {
                 break;
         }
     });
+
+    socket.on('colors', message => {
+        raspberryPi.emit("colors", message);
+    });
 });
