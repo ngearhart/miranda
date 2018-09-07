@@ -31,6 +31,8 @@ let cookies = {};
 
 let currentDateString = new Date().toDateString();
 
+let raspberryPi;
+
 /* 
 * - - - - - -
 */
@@ -130,7 +132,11 @@ io.on('connection', (socket) => {
     logger.info('User connected with id ' + userid);
     logger.verbose("Username: " + users[userid]);
 
-    
+    if (users[userid] == 'pi') {
+        raspberryPi = socket;
+        return;
+    }
+
     database.getTable("users", table => {
         table.query({"username": users[userid]}, null, result => {
             logger.verbose("Sending userData packet");
@@ -141,6 +147,8 @@ io.on('connection', (socket) => {
     socket.on('new-message', (message) => {
         logger.info("Received message from " + users[socket.handshake.query.id] + ": " + message);
         socket.emit('message', users[socket.handshake.query.id] + ': \"' + message + '\"');
+
+        raspberryPi.emit('message', message);
     });
 
     socket.on('userTable', (message) => {
@@ -156,6 +164,7 @@ io.on('connection', (socket) => {
 
     socket.on('new-user', (message) => {
         database.getTable("users", table => {
+            message.password = crypto.createHash('sha256').update(message.password).digest('hex');
             table.insert(message, result => {
                 if (result.insertedCount == 1)
                     socket.emit('new-user', "success");

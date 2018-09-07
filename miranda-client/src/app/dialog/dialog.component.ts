@@ -1,5 +1,5 @@
-import {Component, Inject} from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import {Component, Inject, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatSlider} from '@angular/material';
 
 /**
  * @title Login Dialog
@@ -55,4 +55,65 @@ export class NewUserDialog {
     public dialogRef: MatDialogRef<LoadingDialog>
    // @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
+}
+
+@Component({
+  selector: 'lightdialog',
+  templateUrl: 'light.dialog.html',
+})
+export class LightDialog {
+  applyTo: number;
+
+  red: number;
+  green: number;
+  blue: number;
+
+  @ViewChild('red') redSlider: MatSlider;
+  @ViewChild('green') greenSlider: MatSlider;
+  @ViewChild('blue') blueSlider: MatSlider;
+
+  constructor() {
+    this.applyTo = 0;
+    
+    this.red = 0;
+    this.green = 0;
+    this.blue = 0;
+  }
+
+  resetVals(): void {
+    this.redSlider.value = this.red;
+    this.greenSlider.value = this.green;
+    this.blueSlider.value = this.blue;
+  }
+
+  loadPreset(index: number): void {
+    switch(index) {
+      case 0: // All off
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
+        break;
+      case 1: // All on
+        this.red = 255;
+        this.green = 255;
+        this.blue = 255;
+        break;
+      case 2: // Warm white
+        this.red = 255;
+        this.green = 255;
+        this.blue = 100;
+        break;
+      case 3: // Night
+        this.red = 200;
+        this.green = 60;
+        this.blue = 20;
+        break;
+    }
+    this.resetVals();
+  }
+
+  // onNoClick(): void {
+  //   this.dialogRef.close();
+  // }
+
 }

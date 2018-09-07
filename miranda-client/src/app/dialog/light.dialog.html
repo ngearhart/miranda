@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Lights</h2>
+<mat-dialog-actions style="display:block;">
+    <mat-form-field>
+        <mat-select [value]="applyTo" placeholder="Apply to...">
+            <mat-option [value]="0">All</mat-option>
+            <mat-option [value]="1">Left</mat-option>
+            <mat-option [value]="2">Right</mat-option>
+            <mat-option [value]="3">Even</mat-option>
+            <mat-option [value]="4">Odd</mat-option>
+            <mat-option [value]="5">Half</mat-option>
+            <mat-option [value]="6">Half+1</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <section class="mat-typography">
+        <h4>Red:</h4>
+        <mat-slider min="0" max="255" step="1" #red ngModel="value" thumblabel></mat-slider>
+    </section>
+    <section class="mat-typography">
+        <h4>Green:</h4>
+        <mat-slider min="0" max="255" step="1" #green ngModel="value" thumblabel></mat-slider>
+    </section>
+    <section class="mat-typography">
+        <h4>Blue:</h4>
+        <mat-slider min="0" max="255" step="1" #blue ngModel="value" thumblabel></mat-slider>
+    </section>
+    <section>
+        <mat-menu #appMenu="matMenu">
+            <button mat-menu-item (click)="loadPreset(0);">Off</button>
+            <button mat-menu-item (click)="loadPreset(1);">Full White</button>
+            <button mat-menu-item (click)="loadPreset(2);">Warm White</button>
+            <button mat-menu-item (click)="loadPreset(3);">Night</button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="appMenu">
+            Choose Preset...
+        </button>
+    </section>
+    <button mat-raised-button [mat-dialog-close]='{"applyTo": this.applyTo, "red":red.value, "green": green.value, "blue": blue.value }'>Apply</button>
+</mat-dialog-actions>

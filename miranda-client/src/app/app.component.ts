@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ChatService } from './chat.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
-import { LoginDialog, LoadingDialog } from './dialog/dialog.component';
+import { LoginDialog, LoadingDialog, LightDialog } from './dialog/dialog.component';
 import { User } from './tables/tables.component';
 import { CookieService } from './cookie.service';
 import { trigger, state, transition, style, animate } from '../../node_modules/@angular/animations';
@@ -111,6 +111,17 @@ export class AppComponent implements OnInit {
       width: '300px',
       disableClose: true,
       data: { message: "Logging in..."}
+    });
+  }
+
+  openLightDialog(): void {
+    const dialogRef = this.dialog.open(LightDialog, {
+      width: '300px',
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(data => {
+      //console.log(data.applyTo + " 1 " + data.red + " " + data.green + " " + data.blue);
+      this.chatService.send('colors', data.applyTo + " 1 " + data.red + " " + data.green + " " + data.blue);
     });
   }
 }
