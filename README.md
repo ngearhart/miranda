@@ -1,5 +1,5 @@
 ---
-
+This repository is no longer maintained. Feel free to use it for reference, but this is one of my first large coding projects and there are definitely bits that could use some cleanup.
 
 ---
 
